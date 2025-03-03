@@ -1,0 +1,142 @@
+# flow
+
+A keyboard-first Kanban board in your terminal.
+
+Move work between states with a single keystroke and peek at issue descriptions without opening a browser.
+
+![Demo](./demo.gif)
+
+## Why
+Opening a browser just to move an issue is slow and breaks focus.  
+`flow` keeps the common actions fast, local, and keyboard-driven.
+
+This project is intentionally minimal and opinionated.
+
+## Features
+- Keyboard-first Kanban board
+- Columns and cards loaded from disk (no hardcoded data)
+- One-keystroke transitions (`H` / `L`)
+- Create/edit cards from UI in local mode (`n` / `e`)
+- Toggle issue description (`Enter`)
+- `hjkl` **and** arrow-key navigation
+- Clean, terminal-native visuals
+- Immediate persistence on move (local mode)
+
+## Demo / Local mode
+`flow` runs in **demo mode by default**.
+
+Demo data is loaded from files on disk and can be edited directly.
+This makes the demo representative of real usage, not a hardcoded example.
+
+Default demo board location:
+
+```
+boards/demo/
+```
+
+When `flow` is installed rather than run from source, it copies the demo board to `~/.config/flow/boards/demo` on first run.
+
+To use a persistent local board, point `FLOW_BOARD_PATH` at the board directory:
+
+```bash
+FLOW_BOARD_PATH=/path/to/board cargo run
+```
+
+Local boards default to:
+
+```
+~/.config/flow/boards/default
+```
+
+If you want to use the default local board path, set:
+
+```bash
+FLOW_PROVIDER=local cargo run
+```
+
+## Jira mode
+To load issues from Jira, set:
+
+```bash
+FLOW_PROVIDER=jira
+JIRA_BASE_URL=https://your-site.atlassian.net
+JIRA_EMAIL=you@example.com
+JIRA_API_TOKEN=your_token
+JIRA_BOARD_ID=123
+```
+
+The board ID is required. It determines the column order and the board's filter.
+
+Flow will only show issues assigned to the current user in open sprints.
+
+## Linear mode
+To load issues from Linear, set:
+
+```bash
+FLOW_PROVIDER=linear
+LINEAR_API_KEY=your_key
+LINEAR_TEAM_KEY=ENG
+```
+
+The team key is required. It determines which team's statuses (columns) and issues to load.
+
+By default every status is shown as a column. To show only specific statuses, in a specific order, set `LINEAR_STATUSES` to a comma-separated list of status names:
+
+```bash
+LINEAR_STATUSES="Todo,In Progress,In Review,Done"
+```
+
+Names match your team's Linear status names (case-insensitive). Statuses not listed are hidden, and moves stay within the listed statuses.
+
+Flow will only show issues assigned to the current user in the active cycle.
+
+
+## Board format
+Boards are plain files:
+
+- `board.txt` — column definitions and order
+- `cols/<column>/order.txt` — card ordering per column
+- `cols/<column>/<ID>.md` — card content (Markdown)
+
+Example:
+
+```
+boards/demo/
+  board.txt
+  cols/
+    todo/
+      order.txt
+      FLOW-1.md
+      FLOW-2.md
+```
+
+This format is:
+- human-editable
+- diff-friendly
+- resilient to partial edits
+
+## Keybindings
+- `h` / `l` **or** `←` / `→` — focus column
+- `j` / `k` **or** `↑` / `↓` — select card
+- `H` / `L` — move card left / right
+- `n` — create a new card in focused column (local mode)
+- `e` — edit selected card in `$EDITOR` (local mode)
+- `Enter` — toggle description
+- `r` — reload board from disk
+- `Esc` — close description / quit
+- `q` — quit
+
+## Run
+
+```bash
+cargo run
+```
+
+## Status
+Early, but usable.
+
+The focus is on a solid interaction model, simple persistence, and a testable core.
+Expect breaking changes as features are added.
+
+## License
+MIT
