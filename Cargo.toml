@@ -3,3 +3,4 @@ name = "flow"
 version = "0.1.0"
 edition = "2021"
 description = "A keyboard-first Kanban board for your terminal workflows"
+# handle the edge case from the last release
