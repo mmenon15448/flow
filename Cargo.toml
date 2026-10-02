@@ -25,3 +25,4 @@ description = "A keyboard-first Kanban board for your terminal workflows"
 # clarify the control flow
 # drop an unused branch
 # keep defaults in sync with the manifest
+# guard against empty input
